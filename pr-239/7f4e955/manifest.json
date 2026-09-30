@@ -1,0 +1,59 @@
+{
+  "summary": "本次 PR 在用量页的「请求」新增看板（总计、趋势图、排行与筛选），支持按模型/供应商/Agent 拆分和 Token/费用/请求数切换；请求行可展开查看详情与来源徽标，并新增自动刷新周期选择。托盘面板新增「用量」标签，提供相同口径的紧凑图表。",
+  "scenes": [
+    {
+      "title": "用量看板与请求详情",
+      "shots": [
+        {
+          "file": "01-usage-requests-dashboard.png",
+          "caption": "「请求」标签顶部的新看板：四个总计、趋势图和排行",
+          "width": 2560
+        },
+        {
+          "file": "02-usage-requests-cost.png",
+          "caption": "以费用为指标的趋势图与排行",
+          "width": 2560
+        },
+        {
+          "file": "03-usage-requests-tooltip.png",
+          "caption": "柱子悬停后显示的明细提示",
+          "width": 2560
+        },
+        {
+          "file": "04-usage-request-rows.png",
+          "caption": "请求列表：来源徽标、时长颜色和状态列",
+          "width": 2560
+        },
+        {
+          "file": "05-usage-request-detail.png",
+          "caption": "展开后的请求详情：请求 ID、端点、首响等字段",
+          "width": 2560
+        }
+      ]
+    },
+    {
+      "title": "面板用量标签",
+      "shots": [
+        {
+          "file": "06-panel-usage-tab.png",
+          "caption": "面板「用量」标签：紧凑总计、小趋势图和排行",
+          "width": 2560
+        },
+        {
+          "file": "07-panel-usage-cost.png",
+          "caption": "面板以费用为指标的图表和排行",
+          "width": 2560
+        }
+      ]
+    }
+  ],
+  "video": "preview.mp4",
+  "poster": "poster.png",
+  "errors": [],
+  "leak": false,
+  "skipped": null,
+  "mismatch": "",
+  "unseen": "沙盒只有 DeepSeek API 和 curl 网关成功请求，没有本地会话文件、失败请求或官方登录/订阅账号，因此本地会话合并、会话内容查看、官方/本地会话徽标、失败请求的错误详情等无法展示；Requests 看板与 API 徽标仍可见。",
+  "interactive": true,
+  "pages": 2
+}

@@ -1,0 +1,24 @@
+{
+  "summary": "此 PR 增加按供应商/模型的上游模型名别名（通过 CLI 设置），请求发出前把 model 字段改写为供应商认识的名字；网关最近调用的请求体在设置别名后会显示该别名，而路由、用量列表仍显示规范名。设置页保存现在也会保留所有按模型保存的偏好（包括上游别名）。",
+  "scenes": [
+    {
+      "title": "网关最近调用里的 model 字段",
+      "shots": [
+        {
+          "file": "01-gateway-call-detail.png",
+          "caption": "请求体中的 model 字段；设置上游别名后这里显示供应商认识的模型名",
+          "width": 2560
+        }
+      ]
+    }
+  ],
+  "video": "preview.mp4",
+  "poster": "poster.png",
+  "errors": [],
+  "leak": false,
+  "skipped": null,
+  "mismatch": "",
+  "unseen": "沙盒未设置任何上游别名，因此网关最近调用的请求体 model 字段仍显示规范名；设置别名后这里才会显示供应商名。设置页保存保留所有按模型偏好这一行为也因没有别名而无法直观展示。",
+  "interactive": true,
+  "pages": 1
+}

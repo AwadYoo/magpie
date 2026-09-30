@@ -1,0 +1,29 @@
+{
+  "summary": "设置页保存时现在会完整保留所有按模型存储的偏好（包括新增的输出上限），避免仅修改主题等设置时丢失模型名称、等级和图像等。其余改动为 CLI 命令，不改变界面可见元素。",
+  "scenes": [
+    {
+      "title": "设置页保存时保留按模型偏好",
+      "shots": [
+        {
+          "file": "01-settings-before.png",
+          "caption": "设置页初始状态",
+          "width": 2560
+        },
+        {
+          "file": "02-settings-after-save.png",
+          "caption": "保存后的设置页",
+          "width": 1120
+        }
+      ]
+    }
+  ],
+  "video": "preview.mp4",
+  "poster": "poster.png",
+  "errors": [],
+  "leak": false,
+  "skipped": null,
+  "mismatch": "",
+  "unseen": "按模型存储的输出上限等偏好在此沙盒中没有数据，且界面本身不展示这些映射，因此无法演示保存设置时对它们的保留；只能展示设置页保存路径本身。",
+  "interactive": true,
+  "pages": 1
+}
