@@ -334,10 +334,12 @@ func Describe() (proxy, source string) {
 	return "", "none"
 }
 
-// Redact is a proxy address as logs and the settings status show it:
-// credentials left out, and the address kept as it is when it names none.
-// A malformed address is omitted because its userinfo cannot be safely
-// separated.
+// Redact is a proxy address as magpie may show it: in a log line, an
+// error, a status or the GUI (#852, #1886). Its user and password are
+// left out, and the rest kept as it was written (no scheme added to one
+// written without). A malformed address is "", because its userinfo
+// cannot be safely separated. Requests still go through the address
+// itself; only what is shown of it goes through here.
 func Redact(raw string) string {
 	u, err := Parse(raw)
 	if err != nil {
