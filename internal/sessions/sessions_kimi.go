@@ -159,12 +159,12 @@ func parseKimi(f file) *state {
 		b = bytes.TrimSpace(b)
 		if len(b) > 0 && len(b) <= maxLine && bytes.Contains(b, kimiUsageRecord) {
 			var rec kimiRecord
-			if json.Unmarshal(b, &rec) == nil {
-				if at := ms(rec.Time); at.After(since) {
-					if u := rec.Usage; u != nil {
-						date := dateOf(at)
-						s.use(date, rec.Model, Tokens{Input: u.InputOther, Output: u.Output, CacheRead: u.InputCacheRead, CacheWrite: u.InputCacheCreation})
-					}
+			if json.Unmarshal(b, &rec) == nil && rec.Type == "usage.record" && rec.Usage != nil &&
+				rec.Model != "" && !strings.HasPrefix(rec.Model, kimiGateway) {
+				u := rec.Usage
+				if at := ms(rec.Time); at.After(since) && u.InputOther >= 0 && u.Output >= 0 && u.InputCacheRead >= 0 && u.InputCacheCreation >= 0 {
+					s.use(dateOf(at), rec.Model, Tokens{Input: u.InputOther, Output: u.Output, CacheRead: u.InputCacheRead, CacheWrite: u.InputCacheCreation})
+					s.saw(at, f.main)
 				}
 			}
 		}

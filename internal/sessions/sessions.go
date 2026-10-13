@@ -555,7 +555,8 @@ func CachePath() string { return filepath.Join(filepath.Dir(catalog.CachePath())
 // 17: reconcile recent Claude message revisions.
 // 18: Claude Code's 1-hour cache writes apart from its 5-minute ones.
 // 19: the names the user gave Claude Code's and WorkBuddy's (custom-title).
-const cacheVersion = 19
+// 20: Kimi Code's sessions listed (#1913).
+const cacheVersion = 20
 
 type cacheFile struct {
 	Version int               `json:"version"`
