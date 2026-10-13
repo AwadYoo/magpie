@@ -114,7 +114,7 @@ func TestMaskJSONKeepsAToolGrammar(t *testing.T) {
 	if !json.Valid(out) || !strings.Contains(string(out), `"definition":"`+def+`"`) {
 		t.Fatalf("definition changed:\n%s", out)
 	}
-	if strings.Contains(strings.Split(string(out), `"description"`)[1], `"pd here"`) {
+	if strings.Contains(string(out), `"pd here"`) {
 		t.Fatalf("pd in the description wasn't masked:\n%s", out)
 	}
 	if back := RestoreJSON(out); string(back) != body {
