@@ -431,7 +431,7 @@ func allFiles() []file {
 	var out []file
 	for _, fs := range [][]file{callFiles(), openCodeFiles(), piFiles(),
 		wslFiles("pi"), zcodeFiles(), dshFiles(), clineFiles(), ccFiles("qoder", QoderDir("qoder")), ccFiles("qoder-cn", QoderDir("qoder-cn")),
-		grokFiles(), workbuddyFiles(), droidFiles(), ompFiles(), cursorFiles(), hermesFiles(), almaFiles()} {
+		grokFiles(), workbuddyFiles(), droidFiles(), ompFiles(), cursorFiles(), hermesFiles(), almaFiles(), kimiSessionFiles()} {
 		out = append(out, fs...)
 	}
 	return out
@@ -1088,6 +1088,8 @@ func parserFor(agent string) sessionParser {
 		return sessionParser{whole: parseDroid}
 	case "cursor":
 		return sessionParser{whole: parseCursor}
+	case "kimi":
+		return sessionParser{whole: parseKimi}
 	case "codex":
 		return sessionParser{line: codexBody}
 	case "pi", "omp":
@@ -1387,6 +1389,8 @@ func resumeCommand(distro, agent, id, cwd string) string {
 		run = "grok --resume " + id
 	case "omp":
 		run = "omp --resume " + id
+	case "kimi":
+		run = "kimi --session " + id
 	case "droid":
 		run = "droid --resume " + id
 	case "cursor":
