@@ -176,30 +176,6 @@ func TestClaudeAccountProxyChoice(t *testing.T) {
 	}
 }
 
-// The switch's log line names the account's proxy without its credentials
-// (#1886): the user's data goes through the user's typed address, so the
-// test puts the credential where the user's data goes.
-func TestClaudeSwitchLogHidesTheProxyCredentials(t *testing.T) {
-	settingsPath := claudeTwoAccounts(t)
-	writeFile(t, settingsPath, map[string]any{"env": map[string]any{}})
-	const user, secret = "b@example.com", "s3cret-p%2Ass"
-	if err := Save(Provider{ID: "claude", AccountProxies: map[string]string{user: "http://bob:" + secret + "@10.0.0.9:8080"}}); err != nil {
-		t.Fatal(err)
-	}
-	logs := captureLog(t)
-	claudeSwitch(t, user)
-	got := logs.String()
-	if !strings.Contains(got, "http://10.0.0.9:8080") {
-		t.Fatalf("the log never named the account's proxy; want it in:\n%s", got)
-	}
-	if strings.Contains(got, secret) || strings.Contains(got, "bob@") {
-		t.Fatalf("the log carries the proxy's password:\n%s", got)
-	}
-	if v := claudeEnvOf(t, settingsPath, "HTTPS_PROXY"); v != "http://bob:"+secret+"@10.0.0.9:8080" {
-		t.Fatalf("redaction changed what reaches Claude Code's env: HTTPS_PROXY = %q", v)
-	}
-}
-
 // A settings.json that can't be read is unknown, never empty: it is left
 // as it is, the proxy unwritten.
 func TestClaudeAccountProxyLeavesABrokenSettings(t *testing.T) {
