@@ -99,6 +99,29 @@ func TestMaskJSON(t *testing.T) {
 	}
 }
 
+// A custom tool's grammar definition goes to the vendor as it was: the
+// vendor checks it, and a placeholder in it is a 400 (#1911). A word the
+// user asked for is masked beside it, in a string that isn't the
+// definition.
+func TestMaskJSONKeepsAToolGrammar(t *testing.T) {
+	def := "hunk: add_hunk | delete_hunk | update_hunk"
+	body := `{"input":[{"type":"additional_tools","tools":[
+		{"type":"custom","name":"apply_patch","description":"pd here","format":{"type":"grammar","syntax":"lark","definition":"` + def + `"}}]}]}`
+	out, n := MaskJSON([]byte(body), Options{Secrets: true, Words: []string{"pd"}})
+	if n != 1 {
+		t.Fatalf("%d masked, want the description's pd alone: %s", n, out)
+	}
+	if !json.Valid(out) || !strings.Contains(string(out), `"definition":"`+def+`"`) {
+		t.Fatalf("definition changed:\n%s", out)
+	}
+	if strings.Contains(strings.Split(string(out), `"description"`)[1], `"pd here"`) {
+		t.Fatalf("pd in the description wasn't masked:\n%s", out)
+	}
+	if back := RestoreJSON(out); string(back) != body {
+		t.Fatalf("restored:\n%s\n%s", back, body)
+	}
+}
+
 // what the model writes back with a placeholder in it, streamed as vendors do
 func TestWriterStream(t *testing.T) {
 	masked, _ := Mask(openaiKey, Options{Secrets: true})
