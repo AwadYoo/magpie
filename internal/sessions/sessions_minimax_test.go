@@ -34,4 +34,10 @@ func TestMiniMaxCodeSessions(t *testing.T) {
 	if s.Start.IsZero() || s.Last.IsZero() {
 		t.Fatalf("times: %v %v", s.Start, s.Last)
 	}
+	// a call through magpie's entry is the gateway's to count: the
+	// session that made only those has no tokens and no title here, and
+	// is left unlisted
+	if _, ok := findSession(ss, "minimax-code", "mvs_a67133b1217e4dafb20dc58758717933"); ok {
+		t.Fatalf("the magpie-only session was listed: %+v", ss)
+	}
 }
