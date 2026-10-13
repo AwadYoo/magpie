@@ -431,7 +431,7 @@ func allFiles() []file {
 	var out []file
 	for _, fs := range [][]file{callFiles(), openCodeFiles(), piFiles(),
 		wslFiles("pi"), zcodeFiles(), dshFiles(), clineFiles(), ccFiles("qoder", QoderDir("qoder")), ccFiles("qoder-cn", QoderDir("qoder-cn")),
-		grokFiles(), workbuddyFiles(), droidFiles(), ompFiles(), cursorFiles(), hermesFiles(), almaFiles(), kimiSessionFiles()} {
+		grokFiles(), workbuddyFiles(), droidFiles(), ompFiles(), cursorFiles(), hermesFiles(), almaFiles(), kimiSessionFiles(), minimaxSessionFiles()} {
 		out = append(out, fs...)
 	}
 	return out
@@ -1091,6 +1091,8 @@ func parserFor(agent string) sessionParser {
 		return sessionParser{whole: parseCursor}
 	case "kimi":
 		return sessionParser{whole: parseKimi}
+	case "minimax-code":
+		return sessionParser{whole: parseMiniMax}
 	case "codex":
 		return sessionParser{line: codexBody}
 	case "pi", "omp":

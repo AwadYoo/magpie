@@ -87,11 +87,12 @@ func minimaxSessionID(dir string) string {
 type mcodeLine struct {
 	MessageID string `json:"message_id"`
 	Message   *struct {
-		Role      string   `json:"role"`
-		Provider  string   `json:"provider"`
-		Model     string   `json:"model"`
-		Usage     *piUsage `json:"usage"`
-		Timestamp int64    `json:"timestamp"`
+		Role      string          `json:"role"`
+		Provider  string          `json:"provider"`
+		Model     string          `json:"model"`
+		Usage     *piUsage        `json:"usage"`
+		Timestamp int64           `json:"timestamp"`
+		Content   json.RawMessage `json:"content"`
 	} `json:"message"`
 }
 
