@@ -316,7 +316,7 @@ func Parse(s string) (*url.URL, error) {
 
 // Describe says, for the settings page, what a request to u would use.
 func Describe() (proxy, source string) {
-	defer func() { proxy = proxyAddress(proxy) }()
+	defer func() { proxy = Redact(proxy) }()
 	switch s := strings.TrimSpace(settings.Load().Proxy); s {
 	case "direct":
 		return "", "off"
@@ -334,9 +334,11 @@ func Describe() (proxy, source string) {
 	return "", "none"
 }
 
-// proxyAddress keeps credentials out of the settings status. A malformed
-// address is omitted because its userinfo cannot be safely separated.
-func proxyAddress(raw string) string {
+// Redact is a proxy address as logs and the settings status show it:
+// credentials left out, and the address kept as it is when it names none.
+// A malformed address is omitted because its userinfo cannot be safely
+// separated.
+func Redact(raw string) string {
 	u, err := Parse(raw)
 	if err != nil {
 		return ""

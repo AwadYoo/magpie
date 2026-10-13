@@ -45,6 +45,27 @@ func TestDescribeHidesProxyCredentials(t *testing.T) {
 	}
 }
 
+// A proxy address magpie logs or shows carries no credentials, whatever
+// shape the user typed it in (#1886).
+func TestRedactKeepsCredentialsOutOfAProxyAddress(t *testing.T) {
+	for _, tc := range []struct{ name, raw, want string }{
+		{"plain", "socks5://127.0.0.1:1080", "socks5://127.0.0.1:1080"},
+		{"bare host", "127.0.0.1:7890", "127.0.0.1:7890"},
+		{"authenticated", "http://alice:s3cret@10.0.0.2:8080", "http://10.0.0.2:8080"},
+		{"socks authenticated", "socks5://alice:s3cret@10.0.0.2:1080", "socks5://10.0.0.2:1080"},
+		{"encoded", "http://ali%40ce:p%3Aa%2Fss%25@10.0.0.2:8080", "http://10.0.0.2:8080"},
+		{"username only", "http://alice@127.0.0.1:7890", "http://127.0.0.1:7890"},
+		{"bare host with userinfo", "alice:s3cret@10.0.0.2:8080", "10.0.0.2:8080"},
+		{"malformed", "http://alice:s3cret%zz@10.0.0.2:8080", ""},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			if got := Redact(tc.raw); got != tc.want {
+				t.Fatalf("Redact(%q) = %q, want %q", tc.raw, got, tc.want)
+			}
+		})
+	}
+}
+
 func TestDescribeHidesMalformedSystemProxy(t *testing.T) {
 	t.Setenv("XDG_CONFIG_HOME", t.TempDir())
 	for _, k := range []string{"HTTPS_PROXY", "https_proxy", "HTTP_PROXY", "http_proxy", "ALL_PROXY", "all_proxy", "NO_PROXY", "no_proxy"} {
