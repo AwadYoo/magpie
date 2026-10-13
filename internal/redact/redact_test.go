@@ -41,6 +41,12 @@ func TestMask(t *testing.T) {
 		{in: "id 11010519491231002X card 4111 1111 1111 1111", o: Options{Secrets: true, Personal: true}, gone: []string{"11010519491231002X", "4111 1111 1111 1111"}, count: 2},
 		{in: "order 4111111111111112", o: Options{Secrets: true, Personal: true}, kept: []string{"4111111111111112"}}, // fails Luhn
 		{in: "Project Nightjar ships", o: Options{Secrets: true, Words: []string{"Nightjar"}}, gone: []string{"Nightjar"}, count: 1},
+		// a word that is part of a longer one stands (#1911): "pd" in
+		// "update_hunk" is a lark rule's name, and a placeholder there
+		// breaks the grammar
+		{in: "hunk: add_hunk | delete_hunk | update_hunk", o: Options{Secrets: true, Words: []string{"pd"}}, kept: []string{"update_hunk"}, count: 0},
+		{in: "pd runs alone", o: Options{Secrets: true, Words: []string{"pd"}}, gone: []string{"pd"}, count: 1},
+		{in: "pd,pd", o: Options{Secrets: true, Words: []string{"pd"}}, gone: []string{"pd", "pd"}, count: 2},
 	}
 	for _, c := range cases {
 		if !c.o.Personal && c.o.Words == nil {

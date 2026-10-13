@@ -15,7 +15,10 @@ var kept = map[string]bool{
 	"signature": true, "encrypted_content": true, "data": true, "thoughtSignature": true, "thought_signature": true,
 	"model": true, "id": true, "tool_use_id": true, "call_id": true, "item_id": true, "type": true, "role": true,
 	"name": true, "previous_response_id": true, "prompt_cache_key": true, "media_type": true, "mime_type": true,
-	"mimeType": true, "url": true, "image_url": true, "file_id": true, "reasoning_effort": true, "effort": true,
+	// a custom tool's grammar (Codex's apply_patch is a lark one): the
+	// vendor checks it and a placeholder anywhere in it is a 400 (#1911)
+	"definition": true,
+	"mimeType":   true, "url": true, "image_url": true, "file_id": true, "reasoning_effort": true, "effort": true,
 	"stop_reason": true, "finish_reason": true, "status": true, "object": true, "event": true,
 }
 

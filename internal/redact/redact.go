@@ -344,8 +344,18 @@ func mask(s string, o Options, put func(kind, v string) string) (string, int) {
 			if j < 0 {
 				break
 			}
-			found = append(found, span{i + j, i + j + len(w), "TERM"})
-			i += j + len(w)
+			a := i + j
+			// a word inside a longer word is not the word: "pd" in
+			// "update_hunk" is a rule's name's letters, and a
+			// placeholder there breaks what the name is part of
+			// (#1911)
+			if a > 0 && strings.ContainsRune(tokenCh, rune(s[a-1])) ||
+				a+len(w) < len(s) && strings.ContainsRune(tokenCh, rune(s[a+len(w)])) {
+				i = a + 1
+				continue
+			}
+			found = append(found, span{a, a + len(w), "TERM"})
+			i = a + len(w)
 		}
 	}
 	all := rules
