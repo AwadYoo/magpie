@@ -321,12 +321,27 @@ func TestTaggedReposSlowRead(t *testing.T) {
 		time.Sleep(10 * time.Millisecond)
 	}
 
-	// within the ten minutes, but past taggedRetry: asked again, and
-	// word-guard's package.json not read again
+	// within the ten minutes, but not yet past taggedRetry: not asked
+	// again, and word-guard's package.json not read again. The poll for
+	// the late read can take longer than taggedRetry on a loaded runner
+	// (once it did, at load ~28, #1889), and a list cut short is then
+	// asked again rightly; what this step asks is whether a list asked a
+	// moment ago is asked again within its retry window, so the window
+	// is moved to now for the ask and put back after.
+	taggedMu.Lock()
+	atStart := taggedAt
+	taggedAt = time.Now()
+	taggedMu.Unlock()
 	TaggedRepos(ctx)
 	if n := asked.Load(); n != 2 {
+		taggedMu.Lock()
+		taggedAt = atStart
+		taggedMu.Unlock()
 		t.Fatalf("asked again at once: %d", n)
 	}
+	taggedMu.Lock()
+	taggedAt = atStart
+	taggedMu.Unlock()
 	time.Sleep(taggedRetry + 100*time.Millisecond)
 	before := reads.Load()
 	l = TaggedRepos(ctx)
