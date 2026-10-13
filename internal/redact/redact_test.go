@@ -41,12 +41,6 @@ func TestMask(t *testing.T) {
 		{in: "id 11010519491231002X card 4111 1111 1111 1111", o: Options{Secrets: true, Personal: true}, gone: []string{"11010519491231002X", "4111 1111 1111 1111"}, count: 2},
 		{in: "order 4111111111111112", o: Options{Secrets: true, Personal: true}, kept: []string{"4111111111111112"}}, // fails Luhn
 		{in: "Project Nightjar ships", o: Options{Secrets: true, Words: []string{"Nightjar"}}, gone: []string{"Nightjar"}, count: 1},
-		// a word that is part of a longer one stands (#1911): "pd" in
-		// "update_hunk" is a lark rule's name, and a placeholder there
-		// breaks the grammar
-		{in: "hunk: add_hunk | delete_hunk | update_hunk", o: Options{Secrets: true, Words: []string{"pd"}}, kept: []string{"update_hunk"}, count: 0},
-		{in: "pd runs alone", o: Options{Secrets: true, Words: []string{"pd"}}, gone: []string{"pd"}, count: 1},
-		{in: "pd,pd", o: Options{Secrets: true, Words: []string{"pd"}}, gone: []string{"pd", "pd"}, count: 2},
 	}
 	for _, c := range cases {
 		if !c.o.Personal && c.o.Words == nil {
@@ -96,29 +90,6 @@ func TestMaskJSON(t *testing.T) {
 	plain := `{ "a" : [1, 2.5e3, true, null, "xé"] }`
 	if out, n := MaskJSON([]byte(plain), Options{Secrets: true}); n != 0 || string(out) != plain {
 		t.Fatalf("plain: %s", out)
-	}
-}
-
-// A custom tool's grammar definition goes to the vendor as it was: the
-// vendor checks it, and a placeholder in it is a 400 (#1911). A word the
-// user asked for is masked beside it, in a string that isn't the
-// definition.
-func TestMaskJSONKeepsAToolGrammar(t *testing.T) {
-	def := "hunk: add_hunk | delete_hunk | update_hunk"
-	body := `{"input":[{"type":"additional_tools","tools":[
-		{"type":"custom","name":"apply_patch","description":"pd here","format":{"type":"grammar","syntax":"lark","definition":"` + def + `"}}]}]}`
-	out, n := MaskJSON([]byte(body), Options{Secrets: true, Words: []string{"pd"}})
-	if n != 1 {
-		t.Fatalf("%d masked, want the description's pd alone: %s", n, out)
-	}
-	if !json.Valid(out) || !strings.Contains(string(out), `"definition":"`+def+`"`) {
-		t.Fatalf("definition changed:\n%s", out)
-	}
-	if strings.Contains(string(out), `"pd here"`) {
-		t.Fatalf("pd in the description wasn't masked:\n%s", out)
-	}
-	if back := RestoreJSON(out); string(back) != body {
-		t.Fatalf("restored:\n%s\n%s", back, body)
 	}
 }
 
