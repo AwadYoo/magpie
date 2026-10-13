@@ -74,29 +74,6 @@ func (p Provider) LaneLimit() int {
 	return p.Concurrency()
 }
 
-// QueueLimitOf is how many may wait on p's lane (0: no bound), and
-// QueueWaitOf how long one waits there in seconds (0: as long as it
-// takes). An account made afresh beside the agent's own (AlsoOn) carries
-// none of the provider's settings: they are read from providers.json
-// then, as LaneLimit's are.
-func (p Provider) QueueLimitOf() int {
-	if p.Account != nil && p.QueueLimit == 0 {
-		if s, ok := storedPicks(p.ID); ok {
-			return max(s.QueueLimit, 0)
-		}
-	}
-	return max(p.QueueLimit, 0)
-}
-
-func (p Provider) QueueWaitOf() int {
-	if p.Account != nil && p.QueueWait == 0 {
-		if s, ok := storedPicks(p.ID); ok {
-			return max(s.QueueWait, 0)
-		}
-	}
-	return max(p.QueueWait, 0)
-}
-
 // AccountConcurrencyOf is the account's or key's own limit, and whether it
 // has one (else it takes the provider's).
 func (p Provider) AccountConcurrencyOf(ref string) (int, bool) {

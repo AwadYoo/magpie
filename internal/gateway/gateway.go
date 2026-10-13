@@ -2217,7 +2217,7 @@ func (s *Server) serve(w http.ResponseWriter, r *http.Request, from provider.Pro
 			waited := time.Now()
 			// a streaming agent waiting is kept alive meanwhile
 			queuedAlive := hw.keepQueued()
-			release, err := s.lanes.take(ctx, c.who(), c.p.LaneLimit(), c.p.QueueLimitOf(), time.Duration(c.p.QueueWaitOf())*time.Second)
+			release, err := s.lanes.take(ctx, c.who(), c.p.LaneLimit(), c.p.QueueLimit, time.Duration(c.p.QueueWait)*time.Second)
 			if err == nil && c.p.RPMLimit() > 0 {
 				// with a MaxRPM, it then waits for room in the minute, and
 				// goes counted in it; the requests it makes on the way
