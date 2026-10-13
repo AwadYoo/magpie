@@ -83,7 +83,7 @@ func (e *errRPM) retryAfter() string {
 
 // rpmWait is how long a request to p waits for room in the minute at most.
 func rpmWait(p provider.Provider) time.Duration {
-	if w := time.Duration(p.QueueWait) * time.Second; w > 0 && w < rpmLongest {
+	if w := time.Duration(p.QueueWaitOf()) * time.Second; w > 0 && w < rpmLongest {
 		return w
 	}
 	return rpmLongest

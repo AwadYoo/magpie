@@ -188,9 +188,9 @@ func laneMessage(c candidate, err error, queued int64) string {
 	}
 	lim := c.p.LaneLimit()
 	if errors.Is(err, errQueueFull) {
-		return fmt.Sprintf("%s: %d requests at once is its limit, and its queue is full (%d waiting); try again shortly", c.label(), lim, c.p.QueueLimit)
+		return fmt.Sprintf("%s: %d requests at once is its limit, and its queue is full (%d waiting); try again shortly", c.label(), lim, c.p.QueueLimitOf())
 	}
-	return fmt.Sprintf("%s: %d requests at once is its limit, and this one waited %.1fs for a free slot, as long as it may (%ds); try again shortly", c.label(), lim, float64(queued)/1000, c.p.QueueWait)
+	return fmt.Sprintf("%s: %d requests at once is its limit, and this one waited %.1fs for a free slot, as long as it may (%ds); try again shortly", c.label(), lim, float64(queued)/1000, c.p.QueueWaitOf())
 }
 
 // releaser gives the slot back, once however often it is called.
